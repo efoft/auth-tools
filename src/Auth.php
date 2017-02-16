@@ -16,6 +16,9 @@ class Auth
     
     $this->authlist = $authlist;
     $this->method = $method;
+    
+    if ( session_id() == '' )
+      session_start();
   }
   
   /**
@@ -100,9 +103,6 @@ class Auth
   {
     if ( $this->method->checkCredentials($username, $password) && $this->authorize($username) )
     {
-      if( session_id() == '' )
-        session_start();
-
       $_SESSION['authorized'] = 1;
       $_SESSION['authname']   = $this->method->formatUsername($username);
     }
