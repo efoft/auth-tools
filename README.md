@@ -105,3 +105,10 @@ Currently authorized user:
 ```
 $authname = $auth->getAuthName();
 ```
+### Debug
+For debug purposes:
+```
+$auth->setDebug(true);
+```
+Use true/1 or false/0 as argument.
+Important! In debug mode plaintext passwords can be put into logs.
