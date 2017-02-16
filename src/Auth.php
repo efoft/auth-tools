@@ -5,7 +5,7 @@ use AuthTools\AuthMethods\AuthMethodInterface;
 
 class Auth
 {
-  private $debug = true;
+  private $debug = false;
   private $method;
   private $authlist;
   
@@ -16,9 +16,20 @@ class Auth
     
     $this->authlist = $authlist;
     $this->method = $method;
-    
+
     if ( session_id() == '' )
       session_start();
+  }
+  
+  /**
+   * Enable debug mode
+   *
+   * @param   boolean   $debug
+   */
+  public function setDebug($debug)
+  { 
+    $this->debug = (bool)$debug;
+    $this->method->setDebug($this->debug);
   }
   
   /**
@@ -89,7 +100,7 @@ class Auth
    */
   public function logout()
   {
-    if ( $this->checkAuth() )
+    if ( isset($_SESSION['authorized']) )
       unset($_SESSION['authorized']);
   }
 

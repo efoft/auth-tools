@@ -4,6 +4,7 @@ namespace AuthTools\AuthMethods;
 class HTPasswd implements AuthMethodInterface
 {
   private $pass_array = array();
+  private $debug = false;
   
   public function __construct($passwdfile)
   {
@@ -17,6 +18,16 @@ class HTPasswd implements AuthMethodInterface
       $pass = chop($array[1]);
       $this->pass_array[$user] = $pass;
     }
+  }
+  
+  /**
+   * Enable debug mode
+   *
+   * @param   boolean   $debug
+   */
+  public function setDebug($debug)
+  {
+    $this->debug = (bool)$debug;
   }
   
   /**
@@ -40,11 +51,11 @@ class HTPasswd implements AuthMethodInterface
   public function checkCredentials($username, $password)
   {
     if ( self::chkpwd_htpasswd($this->pass_array, $username, $password) ) {
-        trigger_error('User ' . $username . ' is granted access');
+        $this->debug && trigger_error(sprintf('Credentials for user "%s" are successfully verified.', $username));
         return true;
     }
     else {
-        trigger_error('User ' . $username . ' is denied access', E_USER_WARNING);
+        $this->debug && trigger_error(sprintf('Credentials for user "%s" are INVALID.', $username), E_USER_WARNING);
         return false;
     }
   }
@@ -61,7 +72,7 @@ class HTPasswd implements AuthMethodInterface
   {
     if ( ! isset($pass_array[$username]) )
     {
-      trigger_error('User '. $username . ' is not is htpasswd file', E_USER_WARNING);
+      $this->debug &&  trigger_error('User '. $username . ' is not is htpasswd file', E_USER_WARNING);
       return false;
     }
 
@@ -77,7 +88,7 @@ class HTPasswd implements AuthMethodInterface
       $generated =  self:: make_htpasswd_non_salted_sha1($password);
     }
     else if ( substr($crypted, 0, 1) == "$" ) {     // MD5 password
-      trigger_error('Detected MD5 password, which is not supported. Aborted!', E_USER_WARNING);
+      $this->debug && trigger_error('Detected MD5 password, which is not supported. Aborted!', E_USER_WARNING);
       return false;
     }
     else {                                              // UNIX CRYPT

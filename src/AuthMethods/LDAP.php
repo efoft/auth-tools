@@ -6,12 +6,23 @@ class LDAP implements AuthMethodInterface
   private $server;
   private $full_domain;
   private $short_domain;
+  private $debug = false;
   
   public function __construct($server, $full_domain, $short_domain)
   {
     $this->server = $server;
     $this->full_domain = $full_domain;
     $this->short_domain = $short_domain;
+  }
+  
+  /**
+   * Enable debug mode
+   *
+   * @param   boolean   $debug
+   */
+  public function setDebug($debug)
+  {
+    $this->debug = (bool)$debug;
   }
   
   /**
@@ -48,13 +59,14 @@ class LDAP implements AuthMethodInterface
     ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
 
     if ( $bind = ldap_bind($connect, $username, $password) ) {
+      $this->debug && trigger_error(sprintf('Successfully binded to LDAP server "%s" with username "%s" and password "%s".',$this->server, $username, $password));
       return true;
     }
     else {
       if ( ldap_get_option($connect, LDAP_OPT_ERROR_STRING, $extended_error) ) {
-        trigger_error("Error Binding to LDAP: $extended_error", E_USER_WARNING);
+        $this->debug && trigger_error("Error Binding to LDAP: $extended_error", E_USER_WARNING);
       } else {
-        trigger_error("Error Binding to LDAP: No additional information is available.", E_USER_WARNING);
+        $this->debug && trigger_error("Error Binding to LDAP: No additional information is available.", E_USER_WARNING);
       }
       return false;
     }
