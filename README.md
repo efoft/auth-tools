@@ -68,7 +68,7 @@ The above means that user1 (if the credentials was successfully verified) is
 2) has access levels 0,1,2 and 3 - this levels can be later used in the project code to limit access to different parts of application. See below the usage examples.
 
 ### Usage
-
+---
 Check if the user is already authed. The procedure also checks for $_POST if auth request is supplied and in such case verifies credentianls:
 ```
 if ( ! $auth->checkAuth() ) {
@@ -106,6 +106,7 @@ Currently authorized user:
 $authname = $auth->getAuthName();
 ```
 ### Debug
+---
 For debug purposes:
 ```
 $auth->setDebug(true);
