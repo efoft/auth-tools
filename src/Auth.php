@@ -74,10 +74,8 @@ class Auth
    */
   public function checkAuthLevel($level_to_check)
   {
-    $permitted_levels = '';
-
     if ( $this->checkAuth() )
-      $permitted_levels = $this->authlist[$_SESSION['authname']];
+      $permitted_levels = isset($this->authlist[$_SESSION['authname']]) ? $this->authlist[$_SESSION['authname']] : '';
 
     return ( strpos($permitted_levels, $level_to_check) !== false );
   }
