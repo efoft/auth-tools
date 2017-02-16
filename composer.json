@@ -1,0 +1,14 @@
+{
+    "name": "efoft/auth-tools",
+    "type": "library",
+    "description": "Helper classes to authenticate and authorize users by POST request against various auth systems",
+    "version" : "1.0.0-alpha1",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AuthTools\\": "src"
+        }
+    }
+}
